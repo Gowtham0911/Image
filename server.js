@@ -1,15 +1,35 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
-// Serve static files from the current directory
-app.use(express.static(__dirname));
+// Validate that the image file exists
+const imagePath = path.join(__dirname, 'image.png');
+if (!fs.existsSync(imagePath)) {
+  console.error('Error: image.png not found in the current directory');
+  process.exit(1);
+}
+
+// Serve the image at the /image.png route
+app.get('/image.png', (req, res) => {
+  res.sendFile(imagePath, (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(500).send('Error serving image');
+    }
+  });
+});
 
 // Serve the image at the /image route
 app.get('/image', (req, res) => {
-  res.sendFile(path.join(__dirname, 'image.png'));
+  res.sendFile(imagePath, (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(500).send('Error serving image');
+    }
+  });
 });
 
 // Home route with information
