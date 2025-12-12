@@ -1,0 +1,20 @@
+{
+  "name": "image-server",
+  "version": "1.0.0",
+  "description": "Simple server to serve image.png via URL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "image",
+    "server",
+    "static"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
