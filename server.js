@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -11,6 +12,18 @@ if (!fs.existsSync(imagePath)) {
   console.error('Error: image.png not found in the current directory');
   process.exit(1);
 }
+
+// Rate limiting middleware to prevent abuse
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply rate limiting to all routes
+app.use(limiter);
 
 // Serve the image at the /image.png route
 app.get('/image.png', (req, res) => {
